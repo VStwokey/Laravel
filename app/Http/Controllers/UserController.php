@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-# Models
+// Models
 use App\Models\User;
 
 class UserController extends Controller
@@ -14,10 +14,10 @@ class UserController extends Controller
      */
     public function index()
     {
+        //
         $usuarios = User::orderBy('name')->paginate(20);
-        //dd($usuarios);
-        return view('usuario.index')
-            ->with(compact('usuarios'));
+        // dd($usuarios);
+        return view('usuario.index')->with(compact('usuarios'));
     }
 
     /**
@@ -25,7 +25,8 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        $usuario = null;
+        return view('usuario.form')->with(compact('usuario'));
     }
 
     /**
@@ -33,7 +34,18 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required',
+            'email' => 'required|unique:users',
+            'password' => 'required|confirmed|min:4'
+        ]);
+        $usuario = User::create($request->all());
+        // $usuario = new User();
+        // $usuario->fill($request->all());
+        // $usuario->save();
+
+        return redirect()->route('usuario.show', ['id'=>$usuario->id]);
+
     }
 
     /**
@@ -41,7 +53,8 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $usuario = User::find($id);
+        return view('usuario.show')->with(compact('usuario'));
     }
 
     /**
@@ -49,7 +62,8 @@ class UserController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $usuario = User::find($id);
+        return view('usuario.form')->with(compact('usuario'));
     }
 
     /**
@@ -57,7 +71,13 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $usuario =  User::find($id);
+        $usuario->update($request->all());
+
+        return redirect()
+            ->route('usuario.show',['id' => $usuario->id])
+            ->with('success','Atualizado com sucesso!');
+
     }
 
     /**
@@ -65,6 +85,10 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $usuario = User::find($id);
+        $usuario->destroy($id);
+
+
+        return redirect()->back()->with('danger', 'Excluído com sucesso!');
     }
 }

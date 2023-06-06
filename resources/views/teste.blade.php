@@ -1,8 +1,8 @@
 @extends('layouts.base')
 
 @section('content')
-    <h1>TESTE</h1>
-    <table class="table table-striped">
+    <h1>teste</h1>
+    <table class="table table-border table-striped">
         <tr>
             <td>1</td>
             <td>2</td>

@@ -1,12 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\{
-    ProfileController,
-    UserController
-};
-
-
+use App\Http\Controllers\{ProfileController,UserController};
+use App\Models\User;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,7 +18,6 @@ use App\Http\Controllers\{
 Route::get('/', function () {
     return view('welcome');
 });
-
 Route::get('/teste', function () {
     return view('teste');
 });
@@ -37,13 +32,24 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+// -------------------------------------------------------
+// | Usuarios
+// -------------------------------------------------------
 
-/**
- * -----------------------------------------------
- * | Usuários
- * -----------------------------------------------
- */
-Route::get('/usuarios',[UserController::class, 'index'])->name('usuario.index');
+Route::get('/usuarios', [UserController::class, 'index'])->name('usuario.index');
+
+Route::get('/usuarios/novo', [UserController::class, 'create'])->name('usuario.create');
+
+Route::get('/usuarios/{id}', [UserController::class,'edit'])->name('usuario.edit');
+
+Route::get('/usuarios/excluir/{id}', [UserController::class,'destroy'])->name('usuario.destroy');
+
+Route::get('/usuarios/editar/{id}', [UserController::class,'show'])->name('usuario.show');
+
+Route::post('/usuarios/cadastrar', [UserController::class, 'store'])->name('usuario.store');
+
+Route::post('/usuarios/atualizar/{id}', [UserController::class, 'update'])->name('usuario.update');
+
+
 
 require __DIR__.'/auth.php';
